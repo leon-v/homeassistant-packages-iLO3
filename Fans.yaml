@@ -1,0 +1,90 @@
+ilo3_fans:
+  command_line:
+    - sensor:
+        name: "iLO3 Fans Health"
+        command: 'OPENSSL_CONF=packages/iLO3/UseTls1.cnf curl --insecure https://{{states("input_text.ilo_ip_address")}}/json/health_fans -H "Accept: application/json" -H "User-Agent: HomeAssistant" -H "Cookie: sessionKey={{states("sensor.ilo3_session_token_api")}}"'
+        value_template: "{{ value_json.hostpwr_state }}"
+        json_attributes:
+          - hostpwr_state
+          - fans
+        scan_interval: 10
+
+  template:
+    sensors:
+      ilo3_fan_1_speed:
+        friendly_name: "iLO3 Fan 1 Speed"
+        unique_id: 42470186-a1fe-43e1-934b-193da4fe7628
+        value_template: "{{ state_attr('sensor.ilo3_fans_health', 'fans')[0]['speed'] }}"
+        unit_of_measurement: "%"
+        icon_template: mdi:fan
+
+      ilo3_fan_1_status:
+        friendly_name: "iLO3 Fan 1 Status"
+        unique_id: 5e6d5fce-0c6f-4d30-be5d-2c54f08027e0
+        value_template: "{{ state_attr('sensor.ilo3_fans_health', 'fans')[0]['status'] }}"
+        icon_template: mdi:fan-alert
+
+      ilo3_fan_2_speed:
+        friendly_name: "iLO3 Fan 2 Speed"
+        unique_id: e24251e3-ba41-45c0-afa5-840b6e50dfa2
+        value_template: "{{ state_attr('sensor.ilo3_fans_health', 'fans')[1]['speed'] }}"
+        unit_of_measurement: "%"
+        icon_template: mdi:fan
+
+      ilo3_fan_2_status:
+        friendly_name: "iLO3 Fan 2 Status"
+        unique_id: d3aac0a4-09a6-4c3f-b4a6-3fce640499c6
+        value_template: "{{ state_attr('sensor.ilo3_fans_health', 'fans')[1]['status'] }}"
+        icon_template: mdi:fan-alert
+
+      ilo3_fan_3_speed:
+        friendly_name: "iLO3 Fan 3 Speed"
+        unique_id: e45f2f9f-1a4f-476e-9c6f-f62d4c03260c
+        value_template: "{{ state_attr('sensor.ilo3_fans_health', 'fans')[2]['speed'] }}"
+        unit_of_measurement: "%"
+        icon_template: mdi:fan
+
+      ilo3_fan_3_status:
+        friendly_name: "iLO3 Fan 3 Status"
+        unique_id: e67a2cdd-36cf-4112-8158-76de46eafd30
+        value_template: "{{ state_attr('sensor.ilo3_fans_health', 'fans')[2]['status'] }}"
+        icon_template: mdi:fan-alert
+
+      ilo3_fan_4_speed:
+        friendly_name: "iLO3 Fan 4 Speed"
+        unique_id: d84a7954-acbf-4486-9bb7-ae04fe7bcb69
+        value_template: "{{ state_attr('sensor.ilo3_fans_health', 'fans')[3]['speed'] }}"
+        unit_of_measurement: "%"
+        icon_template: mdi:fan
+
+      ilo3_fan_4_status:
+        friendly_name: "iLO3 Fan 4 Status"
+        unique_id: 4cdbd6d2-eab2-40e4-96b3-36c4b7c59bc7
+        value_template: "{{ state_attr('sensor.ilo3_fans_health', 'fans')[3]['status'] }}"
+        icon_template: mdi:fan-alert
+
+      ilo3_fan_5_speed:
+        friendly_name: "iLO3 Fan 5 Speed"
+        unique_id: 408b39d8-caa7-4703-b79c-58ef13705857
+        value_template: "{{ state_attr('sensor.ilo3_fans_health', 'fans')[4]['speed'] }}"
+        unit_of_measurement: "%"
+        icon_template: mdi:fan
+
+      ilo3_fan_5_status:
+        friendly_name: "iLO3 Fan 5 Status"
+        unique_id: e5393130-395e-4cc6-b90c-cc613f1aad2c
+        value_template: "{{ state_attr('sensor.ilo3_fans_health', 'fans')[4]['status'] }}"
+        icon_template: mdi:fan-alert
+
+      ilo3_fan_6_speed:
+        friendly_name: "iLO3 Fan 6 Speed"
+        unique_id: acb46a5f-37cd-4575-807e-ec83fd053a49
+        value_template: "{{ state_attr('sensor.ilo3_fans_health', 'fans')[5]['speed'] }}"
+        unit_of_measurement: "%"
+        icon_template: mdi:fan
+
+      ilo3_fan_6_status:
+        friendly_name: "iLO3 Fan 6 Status"
+        unique_id: f12a4a8e-e603-4cc9-8bda-9d3871a4e5bd
+        value_template: "{{ state_attr('sensor.ilo3_fans_health', 'fans')[5]['status'] }}"
+        icon_template: mdi:fan-alert

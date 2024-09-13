@@ -1,0 +1,44 @@
+ilo_power:
+
+  command_line:
+    - sensor:
+        name: "iLO3 Power Readings"
+        command: 'OPENSSL_CONF=packages/iLO3/UseTls1.cnf curl --insecure https://{{states("input_text.ilo_ip_address")}}/json/power_readings -H "Accept: application/json" -H "User-Agent: HomeAssistant" -H "Cookie: sessionKey={{states("sensor.ilo3_session_token_api")}}"'
+        value_template: "{{ value_json.hostpwr_state }}"
+        json_attributes:
+          - hostpwr_state
+          - present_power_reading
+          - average_power_reading
+          - maximum_power_reading
+          - minimum_power_reading
+        scan_interval: 10
+
+  template:
+    sensors:
+      # server_ilo_host_power_state:
+      #   friendly_name: "iLO3 Power State"
+      #   value_template: "{{ state_attr('sensor.ilo3_power_readings', 'hostpwr_state') }}"
+
+      server_ilo_power:
+        friendly_name: "iLO3 Power"
+        value_template: "{{ state_attr('sensor.ilo3_power_readings', 'present_power_reading') }}"
+        unit_of_measurement: "W"
+        device_class: power
+
+      # server_ilo_average_power:
+      #   friendly_name: "iLO3 Average Power"
+      #   value_template: "{{ state_attr('sensor.ilo3_power_readings', 'average_power_reading') }}"
+      #   unit_of_measurement: "W"
+      #   device_class: power
+
+      server_ilo_maximum_power:
+        friendly_name: "iLO3 Max Power"
+        value_template: "{{ state_attr('sensor.ilo3_power_readings', 'maximum_power_reading') }}"
+        unit_of_measurement: "W"
+        device_class: power
+
+      server_ilo_minimum_power:
+        friendly_name: "iLO3 Min Power"
+        value_template: "{{ state_attr('sensor.ilo3_power_readings', 'minimum_power_reading') }}"
+        unit_of_measurement: "W"
+        device_class: power

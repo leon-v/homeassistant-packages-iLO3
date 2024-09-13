@@ -1,0 +1,53 @@
+ilo_temperatures:
+  command_line:
+    - sensor:
+        name: "iLO3 Temperature Health"
+        command: 'OPENSSL_CONF=packages/iLO3/UseTls1.cnf curl --insecure https://{{states("input_text.ilo_ip_address")}}/json/health_temperature -H "Accept: application/json" -H "User-Agent: HomeAssistant" -H "Cookie: sessionKey={{states("sensor.ilo3_session_token_api")}}"'
+        value_template: "{{ value_json.hostpwr_state }}"
+        json_attributes:
+          - hostpwr_state
+          - temperature
+        scan_interval: 10
+
+  template:
+    sensors:
+      # You can uncomment the following sensor if you want to track the overall power state as well.
+      # server_ilo_temperature_power_state:
+      #   friendly_name: "iLO3 Temperature Power State"
+      #   value_template: "{{ state_attr('sensor.ilo3_temperature_health', 'hostpwr_state') }}"
+
+      # Temperature sensors for each item in the temperature array
+      server_ilo_temp_1:
+        friendly_name: "iLO3 Temp 1"
+        value_template: "{{ state_attr('sensor.ilo3_temperature_health', 'temperature')[0]['currentreading'] }}"
+        unit_of_measurement: "°C"
+        icon_template: mdi:thermometer
+
+      server_ilo_temp_1_status:
+        friendly_name: "iLO3 Temp 1 Status"
+        value_template: "{{ state_attr('sensor.ilo3_temperature_health', 'temperature')[0]['status'] }}"
+        icon_template: mdi:alert-circle
+
+      server_ilo_temp_2:
+        friendly_name: "iLO3 Temp 2"
+        value_template: "{{ state_attr('sensor.ilo3_temperature_health', 'temperature')[1]['currentreading'] }}"
+        unit_of_measurement: "°C"
+        icon_template: mdi:thermometer
+
+      server_ilo_temp_2_status:
+        friendly_name: "iLO3 Temp 2 Status"
+        value_template: "{{ state_attr('sensor.ilo3_temperature_health', 'temperature')[1]['status'] }}"
+        icon_template: mdi:alert-circle
+
+      # Add more sensors for the remaining temperatures here...
+
+      server_ilo_temp_30:
+        friendly_name: "iLO3 Temp 30"
+        value_template: "{{ state_attr('sensor.ilo3_temperature_health', 'temperature')[29]['currentreading'] }}"
+        unit_of_measurement: "°C"
+        icon_template: mdi:thermometer
+
+      server_ilo_temp_30_status:
+        friendly_name: "iLO3 Temp 30 Status"
+        value_template: "{{ state_attr('sensor.ilo3_temperature_health', 'temperature')[29]['status'] }}"
+        icon_template: mdi:alert-circle

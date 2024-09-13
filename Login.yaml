@@ -1,0 +1,35 @@
+ilo_login:
+
+  input_text:
+    ilo_username:
+      name: ilo_username
+      initial: !secret ilo_username
+
+    ilo_password:
+      name: ilo_password
+      initial: !secret ilo_password
+
+    ilo_ip_address:
+      name: ilo_ip_address
+      initial: !secret ilo_ip_address
+
+  command_line:
+    - sensor:
+        name: "iLO3 Session Token API"
+        command: packages/iLO3/Login.sh -i {{states('input_text.ilo_ip_address')}} -u {{states('input_text.ilo_username')}} -p {{states('input_text.ilo_password')}}
+        value_template: "{{ value_json.session_key }}"
+        json_attributes:
+          - session_key
+          - user_name
+          - user_account
+          - user_dn
+          - user_type
+          - user_ip
+          - user_expires
+          - login_priv
+          - remote_cons_priv
+          - virtual_media_priv
+          - reset_priv
+          - config_priv
+          - user_priv
+        scan_interval: 3000 # Re-login

@@ -1,0 +1,59 @@
+ilo_power_summary:
+
+  command_line:
+    - sensor:
+        name: "iLO3 Power History"
+        command: 'OPENSSL_CONF=packages/iLO3/UseTls1.cnf curl --insecure https://{{states("input_text.ilo_ip_address")}}/json/power_summary -H "Accept: application/json" -H "User-Agent: HomeAssistant" -H "Cookie: sessionKey={{states("sensor.ilo3_session_token_api")}}"'
+        value_template: "{{ value_json.hostpwr_state }}"
+        json_attributes:
+        - hostpwr_state
+        - last_avg_pwr_accum
+        - last_5min_avg
+        - last_5min_peak
+        - _24hr_average
+        - _24hr_peak
+        - _24hr_min
+        - _24hr_max_cap
+        - _24hr_max_temp
+        - _20min_average
+        - _20min_peak
+        - _20min_min
+        - _20min_max_cap
+        - max_measured_wattage
+        - min_measured_wattage
+        - volts
+        - power_cap
+        - power_cap_mode
+        - power_regulator_mode
+        - power_supply_capacity
+        - power_supply_input_power
+        - num_valid_history_samples
+        - num_valid_fast_history_samples
+        - powerreg
+        scan_interval: 10
+
+  template:
+    sensors:
+      ilo3_power_history_24hr_max:
+        friendly_name: "iLO3 24 Hour Max Power"
+        value_template: "{{ state_attr('sensor.ilo3_power_history', '_24hr_peak') }}"
+        unit_of_measurement: "W"
+        device_class: power
+
+      ilo3_power_history_24hr_min:
+        friendly_name: "iLO3 24 Hour Min Power"
+        value_template: "{{ state_attr('sensor.ilo3_power_history', '_24hr_min') }}"
+        unit_of_measurement: "W"
+        device_class: power
+
+      ilo3_power_history_24hr_delta:
+        friendly_name: "iLO3 24 Hour Delta Power"
+        value_template: "{{ state_attr('sensor.ilo3_power_history', '_24hr_peak') - state_attr('sensor.ilo3_power_history', '_24hr_min') }}"
+        unit_of_measurement: "W"
+        device_class: power
+
+      ilo3_power_history_input_power:
+        friendly_name: "iLO3 Input Power"
+        value_template: "{{ state_attr('sensor.ilo3_power_history', 'power_supply_input_power') }}"
+        unit_of_measurement: "W"
+        device_class: power
